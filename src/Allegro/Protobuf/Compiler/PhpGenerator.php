@@ -550,7 +550,7 @@ class PhpGenerator
             ->newline()
             ->appendParam('param', $typeName . ' $value Value to append')
             ->newline()
-            ->appendParam('return', 'null');
+            ->appendParam('return', '\$this');
 
         $buffer->newline()
             ->append($comment)
@@ -568,7 +568,7 @@ class PhpGenerator
         $comment = new CommentStringBuffer(self::TAB, self::EOL);
         $comment->append('Clears \'' . $field->getName() . '\' list')
             ->newline()
-            ->appendParam('return', 'null');
+            ->appendParam('return', '\$this');
 
         $buffer->newline()
             ->append($comment)
