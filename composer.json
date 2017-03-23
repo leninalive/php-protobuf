@@ -1,5 +1,5 @@
 {
-    "name": "allegro/php-protobuf",
+    "name": "leninalive/php-protobuf",
     "description": "Google's Protocol Buffers for PHP",
     "type": "library",
     "keywords": [
