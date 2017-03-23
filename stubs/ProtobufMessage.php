@@ -1,7 +1,5 @@
 <?php
 
-die("This is a stub file for IDEs, don't use it directly!");
-
 abstract class ProtobufMessage
 {
     const PB_TYPE_DOUBLE     = 1;
@@ -12,7 +10,8 @@ abstract class ProtobufMessage
     const PB_TYPE_SIGNED_INT = 6;
     const PB_TYPE_STRING     = 7;
     const PB_TYPE_BOOL       = 8;
-    
+
+    protected static $fields = array();
     protected $values = array();
 
     /**
@@ -26,14 +25,24 @@ abstract class ProtobufMessage
      * 
      * @return null
      */
-    public function append($position, $value) {}
+    public function append($position, $value) {
+        if (!array_key_exists($position, $this->values) || !is_array($this->values[$position])) {
+            $this->values[$position] = array();
+        }
+
+        $this->values[$position][] = $value;
+        return $this;
+    }
 
     /**
      * @param int $position
      * 
-     * @return null
+     * @return $this
      */
-    public function clear($position) {}
+    public function clear($position) {
+        $this->values[$position] = array();
+        return $this;
+    }
 
     /**
      * @param bool $onlySet
@@ -53,7 +62,13 @@ abstract class ProtobufMessage
      * 
      * @return int
      */
-    public function count($position) {}
+    public function count($position) {
+        if (array_key_exists($position, $this->values) && is_array($this->values[$position])) {
+            return count($this->values[$position]);
+        }
+
+        return 0;
+    }
 
     /**
      * @param int      $position
@@ -61,7 +76,27 @@ abstract class ProtobufMessage
      *
      * @return mixed
      */
-    public function get($position = -1, $offset = null) {}
+    public function get($position = -1, $offset = null) {
+        $result = null;
+
+        if (array_key_exists($position, $this->values)) {
+            $result = $this->values[$position];
+        }
+
+        if (null === $result && array_key_exists($position, self::$fields)) {
+            $field = self::$fields[$position];
+            if (array_key_exists('default', $field)) {
+                $result = $field['default'];
+            }
+        }
+
+        if (null !== $result && null !== $offset && is_array($result)) {
+            $result = $result[$offset];
+        }
+
+        return $result;
+
+    }
 
     /**
      * @param string $packed
@@ -70,20 +105,29 @@ abstract class ProtobufMessage
      * 
      * @return mixed
      */
-    public function parseFromString($packed) {}
+    public function parseFromString($packed) {
+        $this->values = unserialize($packed, [
+            'allowed_classes' => TRUE
+        ]);
+    }
 
     /**
      * @throws Exception
      *
      * @return string
      */
-    public function serializeToString() {}
+    public function serializeToString() {
+        return serialize($this->values);
+    }
 
     /**
      * @param int   $position
      * @param mixed $value
      * 
-     * @return null
+     * @return $this
      */
-    public function set($position = -1, $value) {}
+    public function set($position = -1, $value) {
+        $this->values[$position] = $value;
+        return $this;
+    }
 }
