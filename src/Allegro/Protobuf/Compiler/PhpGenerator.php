@@ -343,7 +343,7 @@ class PhpGenerator
         $buffer->append($comment);
 
         $className = $this->_createClassName($descriptor);
-        $buffer->append('class ' . $className . ' extends \ProtobufMessage')
+        $buffer->append('class ' . $className . ' extends ' . $this->_getBaseClass())
             ->append('{')
             ->increaseIdentation();
 
@@ -427,6 +427,14 @@ class PhpGenerator
         }
 
         return implode(self::PHP_NAMESPACE_SEPARATOR, $namespace);
+    }
+
+    private function _getBaseClass() {
+        if (isset($this->customArguments['options']['base_class'])) {
+            return $this->customArguments['options']['base_class'];
+        }
+
+        return '\ProtobufMessage';
     }
 
     /**
