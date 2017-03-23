@@ -37,7 +37,7 @@ class PhpGenerator
                 $baseName = str_replace(
                     PhpGenerator::PHP_NAMESPACE_SEPARATOR,
                     DIRECTORY_SEPARATOR,
-                    $namespaceName . PhpGenerator::PHP_NAMESPACE_SEPARATOR . $className
+                    /*$namespaceName . PhpGenerator::PHP_NAMESPACE_SEPARATOR . */$className
                 );
             } else {
                 $baseName = $className;
