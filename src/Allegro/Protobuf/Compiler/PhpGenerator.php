@@ -687,7 +687,7 @@ class PhpGenerator
                 $typeName . ' $value Property value'
             )
             ->newline()
-            ->appendParam('return', 'null');
+            ->appendParam('return', '\$this');
 
         $buffer->newline()
             ->append($comment)
